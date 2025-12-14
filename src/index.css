@@ -114,6 +114,9 @@ h1 {
   color: #bbbbbb;
 }
 
+.citytext{
+  padding-top: 25px;
+}
 
 .input-container button {
   padding: 10px 16px;

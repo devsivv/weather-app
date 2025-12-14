@@ -179,7 +179,7 @@ function Webpage() {
                 )}
 
                 {!loading && !weatherData && !error && (
-                    <p>Enter a city to see the weather.</p>
+                    <p className='citytext'>Enter a city to see the weather.</p>
                 )}
             </div>
         </div>
