@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 const API_KEY = import.meta.env.VITE_WEATHER_API_KEY;
 
 
-const MAX_HISTORY = 3;
+const MAX_HISTORY = 4;
 
 function Webpage() {
     const [city, setCity] = useState('');
@@ -110,7 +110,7 @@ function Webpage() {
 
 
     return (
-        <div className="container-wrapper">
+        <div className="weather-dashboard">
             <div className="container">
                 <h1>Weather App</h1>
 
