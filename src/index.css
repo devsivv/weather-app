@@ -221,7 +221,6 @@ h1 {
   font-size: 0.9rem;
   color: rgba(255, 255, 255, 0.7);
   width: 100%;
-  /* forces line break */
   margin-bottom: 5px;
 }
 
@@ -257,6 +256,7 @@ h1 {
   color: rgba(255, 255, 255, 0.6);
   font-size: 0.8rem;
   background-color: rgba(15, 32, 39, 0.3);
+    backdrop-filter: blur(3px);
 }
 
 .header {
