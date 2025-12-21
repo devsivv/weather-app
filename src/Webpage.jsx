@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 const API_KEY = import.meta.env.VITE_WEATHER_API_KEY;
 const MAX_HISTORY = 4;
 
-function Webpage({ setForecastData }) {
+function Webpage({ setForecastData, setForecastLoading  }) {
     const [city, setCity] = useState('');
     const [weatherData, setWeatherData] = useState(null);
     const [error, setError] = useState(null);
@@ -38,28 +38,33 @@ function Webpage({ setForecastData }) {
         setHistory([normalizedCity, ...filtered].slice(0, MAX_HISTORY));
     };
 
-    const fetchForecastData = async (lat, lon) => {
-        try {
-            const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`;
-            const res = await fetch(url);
-            if (!res.ok) throw new Error();
+const fetchForecastData = async (lat, lon) => {
+    try {
+        setForecastLoading(true)
 
-            const data = await res.json();
+        const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`
+        const res = await fetch(url)
+        if (!res.ok) throw new Error()
 
-            const dailyMap = {};
-            data.list.forEach(item => {
-                if (item.dt_txt.includes("12:00:00")) {
-                    const date = item.dt_txt.split(" ")[0];
-                    dailyMap[date] = item;
-                }
-            });
+        const data = await res.json()
 
-            const daily = Object.values(dailyMap).slice(0, 5);
-            setForecastData(daily);
-        } catch {
-            setForecastData([]);
-        }
-    };
+        const dailyMap = {}
+        data.list.forEach(item => {
+            if (item.dt_txt.includes("12:00:00")) {
+                const date = item.dt_txt.split(" ")[0]
+                dailyMap[date] = item
+            }
+        })
+
+        const daily = Object.values(dailyMap).slice(0, 5)
+        setForecastData(daily)
+    } catch {
+        setForecastData([])
+    } finally {
+        setLoading(false);
+        setForecastLoading(false)
+    }
+}
 
     const fetchWeatherData = async (cityName) => {
         const name = cityName.trim();
@@ -80,8 +85,8 @@ function Webpage({ setForecastData }) {
             fetchForecastData(data.coord.lat, data.coord.lon);
         } catch (err) {
             setError(err.message);
-        } finally {
             setLoading(false);
+            setForecastLoading(false);
         }
     };
 

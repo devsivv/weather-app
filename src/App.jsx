@@ -5,15 +5,22 @@ import Footer from './Footer'
 import ForecastWrapper from './ForecastWrapper'
 import { useState } from 'react'
 
-function App() {
+  function App() {
   const [forecastData, setForecastData] = useState([])
+  const [forecastLoading, setForecastLoading] = useState(false)
 
   return (
     <>
       <Header />
-      <Webpage setForecastData={setForecastData} />
-      {forecastData.length > 0 && (
-        <ForecastWrapper forecastData={forecastData} />
+      <Webpage
+        setForecastData={setForecastData}
+        setForecastLoading={setForecastLoading}
+      />
+      {(forecastLoading || forecastData.length > 0) && (
+        <ForecastWrapper
+          forecastData={forecastData}
+          loading={forecastLoading}
+        />
       )}
       <Footer />
     </>
