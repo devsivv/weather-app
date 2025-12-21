@@ -1,16 +1,59 @@
-# React + Vite
+# Weather Dashboard 🌦️
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A sleek, responsive weather forecasting application built with React and Vite. It provides real-time weather updates and a 5-day forecast using the OpenWeather API.
 
-Currently, two official plugins are available:
+## 🚀 Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+* **Real-time Weather:** Get current temperature, wind speed, and weather conditions.
+* **5-Day Forecast:** Detailed daily forecast visualized with custom icons.
+* **Geolocation Support:** Automatically detects your current location to show local weather.
+* **Search History:** Keeps track of your recent searches (stored in LocalStorage).
+* **Responsive Design:** Fully optimized for mobile, tablet, and desktop views.
+* **Skeleton Loading:** Smooth UI transitions with skeleton loaders during data fetching.
 
-## React Compiler
+## 🛠️ Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+* **Frontend:** React.js, Vite
+* **Styling:** CSS3 (Glassmorphism UI)
+* **API:** [OpenWeatherMap API](https://openweathermap.org/api)
+* **Deployment:** (e.g., Vercel / Netlify / GitHub Pages)
 
-## Expanding the ESLint configuration
+## 📦 Installation & Setup
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+1. **Clone the repository:**
+   ```bash
+   git clone [https://github.com/devsivv/weather-app.git](https://github.com/devsivv/weather-app.git)
+   cd weather-app
+Install dependencies:
+
+Bash
+
+npm install
+Set up Environment Variables: Create a .env file in the root directory and add your OpenWeather API key:
+
+Code snippet
+
+VITE_WEATHER_API_KEY=your_api_key_here
+Run the development server:
+
+Bash
+
+npm run dev
+📂 Project Structure
+Plaintext
+
+src/
+├── App.jsx              # Main application logic and state management
+├── Webpage.jsx          # Current weather display and search functionality
+├── ForecastWrapper.jsx   # 5-day forecast rendering and skeleton UI
+├── Header.jsx           # App header component
+├── Footer.jsx           # App footer component
+├── index.css            # Global styles and layout
+└── App.css              # Component-specific styles
+🛡️ License
+Distributed under the MIT License.
+
+Built by Shivam Dubey
+
+
+Would you like me to add a "How it Works" section explaining the data filtering logic for the 5-day forecast?
