@@ -6,10 +6,12 @@ function Footer() {
   <p>
     © {currentYear} Weather Dashboard 
     </p>
+    <div class="footer-separator">
     <p>
   • Built by Shivam Dubey
-  &nbsp;&nbsp; • Data powered by OpenWeather API
+  &nbsp;&nbsp; </p> <p>• Data powered by OpenWeather API
 </p>
+    </div>
 </footer>
 
     );
