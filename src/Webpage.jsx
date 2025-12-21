@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
 
 const API_KEY = import.meta.env.VITE_WEATHER_API_KEY;
-
-
 const MAX_HISTORY = 4;
 
-function Webpage() {
+function Webpage({ setForecastData }) {
     const [city, setCity] = useState('');
     const [weatherData, setWeatherData] = useState(null);
     const [error, setError] = useState(null);
@@ -15,86 +13,122 @@ function Webpage() {
         try {
             const storedHistory = localStorage.getItem('weatherCityHistory');
             return storedHistory ? JSON.parse(storedHistory) : [];
-        } catch (e) {
+        } catch {
             return [];
         }
     });
 
     useEffect(() => {
-        try {
-            localStorage.setItem('weatherCityHistory', JSON.stringify(history));
-        } catch (e) {
-        }
+        localStorage.setItem('weatherCityHistory', JSON.stringify(history));
     }, [history]);
+
+    useEffect(() => {
+        fetchWeatherByLocation();
+    }, []);
 
     const updateHistory = (newCity) => {
         const normalizedCity =
-            newCity.trim().charAt(0).toUpperCase() + newCity.trim().slice(1).toLowerCase();
+            newCity.trim().charAt(0).toUpperCase() +
+            newCity.trim().slice(1).toLowerCase();
 
-        const capitalize = (str) => {
-            if (!str) return str;
-            return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
-        };
+        const filtered = history.filter(
+            c => c.toUpperCase() !== normalizedCity.toUpperCase()
+        );
 
-        const capitalizedCity = capitalize(normalizedCity);
-        const filteredHistory = history.filter(c => c.toUpperCase() !== normalizedCity.toUpperCase());
+        setHistory([normalizedCity, ...filtered].slice(0, MAX_HISTORY));
+    };
 
-        const newHistory = [normalizedCity, ...filteredHistory].slice(0, MAX_HISTORY);
+    const fetchForecastData = async (lat, lon) => {
+        try {
+            const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`;
+            const res = await fetch(url);
+            if (!res.ok) throw new Error();
 
-        setHistory(newHistory);
+            const data = await res.json();
+
+            const dailyMap = {};
+            data.list.forEach(item => {
+                if (item.dt_txt.includes("12:00:00")) {
+                    const date = item.dt_txt.split(" ")[0];
+                    dailyMap[date] = item;
+                }
+            });
+
+            const daily = Object.values(dailyMap).slice(0, 5);
+            setForecastData(daily);
+        } catch {
+            setForecastData([]);
+        }
     };
 
     const fetchWeatherData = async (cityName) => {
-        const normalizedCity = cityName.trim();
-        if (!normalizedCity) return;
+        const name = cityName.trim();
+        if (!name) return;
 
         setLoading(true);
         setError(null);
         setWeatherData(null);
 
         try {
-            const url = `https://api.openweathermap.org/data/2.5/weather?q=${normalizedCity}&appid=${API_KEY}&units=metric`;
-            const response = await fetch(url);
+            const url = `https://api.openweathermap.org/data/2.5/weather?q=${name}&appid=${API_KEY}&units=metric`;
+            const res = await fetch(url);
+            if (!res.ok) throw new Error("City not found");
 
-            if (!response.ok) {
-                throw new Error("City not found or API error.");
-            }
-
-            const data = await response.json();
+            const data = await res.json();
             setWeatherData(data);
-
-            updateHistory(normalizedCity);
-
+            updateHistory(data.name);
+            fetchForecastData(data.coord.lat, data.coord.lon);
         } catch (err) {
-            setError(err.message || "An unexpected error occurred.");
+            setError(err.message);
         } finally {
             setLoading(false);
         }
     };
 
-    const handleGetWeather = () => {
-        fetchWeatherData(city);
+    const fetchWeatherByLocation = () => {
+        if (!navigator.geolocation) {
+            setError("Geolocation not supported");
+            return;
+        }
+
+        setLoading(true);
+        setError(null);
+        setWeatherData(null);
+
+        navigator.geolocation.getCurrentPosition(
+            async (pos) => {
+                try {
+                    const { latitude, longitude } = pos.coords;
+                    const url = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${API_KEY}&units=metric`;
+                    const res = await fetch(url);
+                    if (!res.ok) throw new Error();
+
+                    const data = await res.json();
+                    setWeatherData(data);
+                    setCity(data.name);
+                    updateHistory(data.name);
+                    fetchForecastData(data.coord.lat, data.coord.lon);
+                } catch {
+                    setError("Location fetch failed");
+                } finally {
+                    setLoading(false);
+                }
+            },
+            () => {
+                setError("Location permission denied");
+                setLoading(false);
+            }
+        );
     };
 
-    const handleHistoryClick = (historyCity) => {
-        setCity(historyCity);
-        fetchWeatherData(historyCity);
-    };
-
-    const getWeatherUI = (weatherMain) => {
-        switch (weatherMain) {
-            case "Clear":
-                return { icon: "☀️", color: "#facc15" };
-            case "Clouds":
-                return { icon: "☁️", color: "#60a5fa" };
-            case "Rain":
-                return { icon: "🌧️", color: "#38bdf8" };
-            case "Snow":
-                return { icon: "❄️", color: "#bae6fd" };
-            case "Thunderstorm":
-                return { icon: "⛈️", color: "#818cf8" };
-            default:
-                return { icon: "🌤️", color: "#94a3b8" };
+    const getWeatherUI = (main) => {
+        switch (main) {
+            case "Clear": return { icon: "☀️", color: "#facc15" };
+            case "Clouds": return { icon: "☁️", color: "#60a5fa" };
+            case "Rain": return { icon: "🌧️", color: "#38bdf8" };
+            case "Snow": return { icon: "❄️", color: "#bae6fd" };
+            case "Thunderstorm": return { icon: "⛈️", color: "#818cf8" };
+            default: return { icon: "🌤️", color: "#94a3b8" };
         }
     };
 
@@ -108,7 +142,6 @@ function Webpage() {
         </div>
     );
 
-
     return (
         <div className="weather-dashboard">
             <div className="container">
@@ -120,25 +153,21 @@ function Webpage() {
                         placeholder="Enter city name"
                         value={city}
                         onChange={(e) => setCity(e.target.value)}
-                        onKeyDown={(e) => {
-                            if (e.key === 'Enter') handleGetWeather();
-                        }}
+                        onKeyDown={(e) => e.key === "Enter" && fetchWeatherData(city)}
                         disabled={loading}
                     />
-
-
                 </div>
 
                 {history.length > 0 && (
                     <div className="history-container">
                         <p>Recent Searches:</p>
-                        {history.map((histCity, index) => (
+                        {history.map((h, i) => (
                             <button
-                                key={index}
+                                key={i}
                                 className="history-button"
-                                onClick={() => handleHistoryClick(histCity)}
+                                onClick={() => fetchWeatherData(h)}
                             >
-                                {histCity}
+                                {h}
                             </button>
                         ))}
                     </div>
@@ -146,40 +175,27 @@ function Webpage() {
 
                 {loading && <WeatherSkeleton />}
 
-
                 {weatherData && (() => {
                     const { icon, color } = getWeatherUI(weatherData.weather[0].main);
-
                     return (
                         <div id="weather-info" style={{ color }}>
                             <div style={{ fontSize: "3rem" }}>{icon}</div>
-
                             <h2>{weatherData.name}</h2>
-
-                            <p className="temp" style={{ fontSize: "2.2rem", fontWeight: "bold" }}>
-                                {weatherData.main.temp} °C
-                            </p>
-
+                            <p className="temp">{weatherData.main.temp} °C</p>
                             <p className="weatherinfo">
                                 Wind Speed: {weatherData.wind.speed} m/s
                             </p>
-
                             <p className="weatherinfo">
-                                Weather: {weatherData.weather[0].description}
+                                {weatherData.weather[0].description}
                             </p>
                         </div>
                     );
                 })()}
 
-
-                {error && (
-                    <p className="error">
-                        {error}
-                    </p>
-                )}
+                {error && <p className="error">{error}</p>}
 
                 {!loading && !weatherData && !error && (
-                    <p className='citytext'>Enter a city to see the weather.</p>
+                    <p className="citytext">Enter a city to see the weather.</p>
                 )}
             </div>
         </div>
