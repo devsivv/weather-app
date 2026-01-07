@@ -2,7 +2,7 @@ function Header() {
     return (
         <header className="header">
             <h1>
-                Weather Dashboard
+                teja mc hai
             </h1>
         </header>
     );
