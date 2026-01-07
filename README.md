@@ -1,12 +1,7 @@
 <h1 align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=700&size=35&pause=1000&color=F7F7F7&center=true&vCenter=true&width=435&lines=Weather+Dashboard+⛅">
-    <source media="(prefers-color-scheme: light)" srcset="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=700&size=35&pause=1000&color=333333&center=true&vCenter=true&width=435&lines=Weather+Dashboard+⛅">
-    <img alt="Happy Coding!" src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=700&size=35&pause=1000&color=F7F7F7&center=true&vCenter=true&width=435&lines=Weather+Dashboard+⛅">
-  </picture>
+  Weather Dashboard ⛅
 </h1>
-
-A sleek, responsive weather forecasting application built with React and Vite. It provides real-time weather updates and a 5-day forecast using the OpenWeather API.
+ <p align="center"> A sleek, responsive weather forecasting web application built using <b>React</b> and <b>Vite</b>. It delivers real-time weather updates along with a clean 5-day forecast using the OpenWeather API. </p>
 
 ## 🚀 Features
 
@@ -65,12 +60,7 @@ Built by [Shivam Dubey](https://github.com/devsivv)
 
 
 
----
----
+
 <h1 align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=700&size=35&pause=1000&color=F7F7F7&center=true&vCenter=true&width=435&lines=Happy+Coding!+💻+✨">
-    <source media="(prefers-color-scheme: light)" srcset="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=700&size=35&pause=1000&color=333333&center=true&vCenter=true&width=435&lines=Happy+Coding!+💻+✨">
-    <img alt="Happy Coding!" src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=700&size=35&pause=1000&color=F7F7F7&center=true&vCenter=true&width=435&lines=Happy+Coding!+💻+✨">
-  </picture>
+ Happy+Coding! 💻✨
 </h1>
